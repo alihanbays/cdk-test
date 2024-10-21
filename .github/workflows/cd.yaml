@@ -19,8 +19,8 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Change Directory (if `package.json` is in a subfolder)
-        working-directory: ./cdk-test  # Change this to the folder containing package.json
-        
+        run: ./cdk-test  # Change this to the folder containing package.json
+
       - name: Install Node
         uses: actions/setup-node@v3
       
