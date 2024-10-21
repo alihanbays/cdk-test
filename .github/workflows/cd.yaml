@@ -1,0 +1,38 @@
+name: CD
+
+on:
+  pull_request:
+    branches:
+    - main
+    types: [closed]
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    name: Deploy AWS CDK Typescript Stack
+    runs-on: windows-latest
+    steps:
+      - name: Initiated By User
+        run: echo $GITHUB_ACTOR
+
+      - name: Check Out Code
+        uses: actions/checkout@v3
+      
+      - name: Change Directory (if `package.json` is in a subfolder)
+        run: cd my-first-cdk  # Change this to the folder containing package.json
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+      
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build CDK Stack
+        run: npm run build
+      
+      - name: Deploy AWS CDK Stack
+        run: "npx cdk deploy MyFirstCdkStack --ci --require-approval never --no-asset-metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-west-2"
